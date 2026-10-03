@@ -1,0 +1,853 @@
+<title>Portfolio Template</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#eef0f5;
+    --surface:#ffffff;
+    --surface-2:#e6e9f1;
+    --line:rgba(20,25,45,.11);
+    --text:#12141c;
+    --muted:#5b6172;
+    --blue:#3452d9;   --blue-soft:rgba(52,82,217,.12);
+    --purple:#8332d6; --purple-soft:rgba(131,50,214,.12);
+    --pink:#c2287e;   --pink-soft:rgba(194,40,126,.12);
+    --cyan:#0891a8;   --cyan-soft:rgba(8,145,168,.12);
+    --grad:linear-gradient(100deg,#1c2340 0%,#5433c7 38%,#2a63d9 70%,#0891a8 100%);
+    --shadow:0 20px 44px -24px rgba(20,25,45,.30);
+    --font-display:'Unbounded','Segoe UI',sans-serif;
+    --font-body:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sidebar-w:224px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#060810; --surface:#0e1322; --surface-2:#141b2f;
+      --line:rgba(255,255,255,.09); --text:#f4f6fb; --muted:#8e96ab;
+      --blue:#6d8bff; --blue-soft:rgba(109,139,255,.14);
+      --purple:#b57bff; --purple-soft:rgba(181,123,255,.14);
+      --pink:#ff6bb3; --pink-soft:rgba(255,107,179,.14);
+      --cyan:#3fe0ff; --cyan-soft:rgba(63,224,255,.14);
+      --grad:linear-gradient(100deg,#eef0ff 0%,#b6a4ff 35%,#6fa8ff 70%,#3fe0ff 100%);
+      --shadow:0 24px 54px -22px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#060810; --surface:#0e1322; --surface-2:#141b2f;
+    --line:rgba(255,255,255,.09); --text:#f4f6fb; --muted:#8e96ab;
+    --blue:#6d8bff; --blue-soft:rgba(109,139,255,.14);
+    --purple:#b57bff; --purple-soft:rgba(181,123,255,.14);
+    --pink:#ff6bb3; --pink-soft:rgba(255,107,179,.14);
+    --cyan:#3fe0ff; --cyan-soft:rgba(63,224,255,.14);
+    --grad:linear-gradient(100deg,#eef0ff 0%,#b6a4ff 35%,#6fa8ff 70%,#3fe0ff 100%);
+    --shadow:0 24px 54px -22px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;transition:background .25s ease,color .25s ease;}
+  h1,h2,h3{font-family:var(--font-display);font-weight:700;text-wrap:balance;margin:0;letter-spacing:-.01em;}
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;}
+  ::selection{background:var(--purple-soft);}
+  :focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:4px;}
+  .gtext{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .eyebrow{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--purple);display:flex;align-items:center;gap:.6em;margin-bottom:14px;}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--purple);display:inline-block;}
+
+  /* ================= TOP NAV (was a left sidebar) ================= */
+  :root{ --topbar-h:74px; } /* kept in sync with the real bar height by JS (syncTopbarHeight) */
+  .sidebar{
+    position:fixed;top:0;left:0;right:0;width:auto;bottom:auto;
+    border-right:none;border-bottom:1px solid var(--line);background:var(--surface);
+    display:flex;align-items:center;flex-wrap:wrap;gap:14px 28px;
+    padding:15px clamp(20px,4vw,48px);z-index:60;
+  }
+  .logo{font-family:var(--font-display);font-weight:700;font-size:1.25rem;padding:0;flex-shrink:0;}
+  .logo .dot{color:var(--purple);}
+  .side-nav{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:2px;flex:1 1 auto;}
+  .side-nav a{
+    display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:10px;
+    font-size:.9rem;color:var(--muted);position:relative;white-space:nowrap;
+  }
+  .side-nav a svg{width:17px;height:17px;flex-shrink:0;}
+  .side-nav a:hover{color:var(--text);background:var(--surface-2);}
+  .side-nav a.active{color:var(--text);background:var(--purple-soft);}
+  .side-nav a.active svg{color:var(--purple);}
+  .side-bottom{display:flex;flex-direction:row;align-items:center;gap:12px;padding-top:0;flex-shrink:0;}
+  .cv-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-family:var(--font-mono);font-size:.78rem;letter-spacing:.03em;
+    border:1px solid var(--line);border-radius:10px;padding:9px 14px;color:var(--text);white-space:nowrap;
+  }
+  .cv-btn:hover{border-color:var(--purple);color:var(--purple);}
+  .cv-btn svg{width:14px;height:14px;}
+  .side-socials{display:flex;gap:8px;justify-content:center;}
+  .side-socials a{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;}
+  .side-socials a:hover{color:var(--purple);border-color:var(--purple);}
+  .side-socials svg{width:15px;height:15px;}
+  .theme-switch{
+    width:52px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);
+    position:relative;cursor:pointer;display:flex;align-items:center;padding:3px;flex-shrink:0;
+  }
+  .theme-switch .thumb{
+    width:24px;height:24px;border-radius:7px;background:var(--purple);color:var(--surface);
+    display:flex;align-items:center;justify-content:center;transform:translateX(0);transition:transform .25s ease;
+  }
+  :root[data-theme="dark"] .theme-switch .thumb{transform:translateX(22px);}
+  .theme-switch svg{width:14px;height:14px;}
+
+  .menu-btn,.mobile-bar,.mobile-menu{display:none;}
+
+  /* ================= MAIN ================= */
+  main{margin-left:0;margin-top:var(--topbar-h);position:relative;}
+  .wrap{max-width:1600px;margin:0 auto;padding-inline:clamp(24px,4vw,64px);}
+  section{padding:96px 0;border-bottom:1px solid var(--line);position:relative;}
+  section:last-of-type{border-bottom:none;}
+  .section-head{margin-bottom:44px;}
+  .section-head h2{font-size:clamp(1.7rem,3.2vw,2.3rem);}
+
+  .dot-nav{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:40;}
+  .dot-nav .d{width:8px;height:8px;border-radius:50%;background:var(--line);border:none;padding:0;cursor:pointer;transition:background .2s,transform .2s;}
+  .dot-nav .d.active{background:var(--purple);transform:scale(1.35);}
+
+  /* ---- hero ---- */
+  .hero{padding-top:64px;overflow:hidden;}
+  .starfield{position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background-image:radial-gradient(1.5px 1.5px at 20px 30px, var(--muted) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 130px 80px, var(--muted) 50%, transparent 51%),
+      radial-gradient(1px 1px at 90px 160px, var(--muted) 50%, transparent 51%),
+      radial-gradient(1px 1px at 220px 40px, var(--muted) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 300px 120px, var(--muted) 50%, transparent 51%);
+    background-repeat:repeat; background-size:340px 200px;
+    -webkit-mask-image:linear-gradient(180deg,black,transparent 85%);
+            mask-image:linear-gradient(180deg,black,transparent 85%);
+  }
+  .glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.35;pointer-events:none;}
+  .glow-1{width:340px;height:340px;background:var(--purple);top:-60px;right:120px;}
+  .glow-2{width:260px;height:260px;background:var(--cyan);bottom:20px;right:-40px;}
+
+  .avail-pill{
+    position:absolute;top:34px;right:clamp(24px,5vw,56px);display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-mono);font-size:.76rem;border:1px solid var(--line);background:var(--surface);
+    padding:8px 14px;border-radius:99px;color:var(--muted);z-index:2;
+  }
+  .avail-pill .led{width:7px;height:7px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 3px rgba(46,204,113,.2);}
+
+  .hero-grid{display:grid;grid-template-columns:0.85fr .5fr;gap:100px;align-items:center;position:relative;z-index:1;}
+  .hero h1{font-size:clamp(2.6rem,5.6vw,4rem);line-height:1.04;}
+  .hero .tagline{color:var(--muted);font-size:1.1rem;max-width:520px;margin-top:22px;line-height:1.7;}
+  .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;}
+  .btn{font-family:var(--font-mono);font-size:.84rem;letter-spacing:.02em;display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:9px;border:1px solid transparent;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease,color .15s ease;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--grad);color:#fff;}
+  .btn-primary:hover{box-shadow:0 14px 26px -10px var(--purple-soft);}
+  .btn-ghost{border-color:var(--line);color:var(--text);}
+  .btn-ghost:hover{border-color:var(--purple);color:var(--purple);}
+  .btn svg{width:14px;height:14px;}
+
+  .photo-wrap{position:relative;aspect-ratio:4/5;border-radius:22px;
+    background:linear-gradient(160deg,var(--purple-soft),var(--cyan-soft));
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:visible;
+  }
+  .photo-wrap::before,.photo-wrap::after{content:"";position:absolute;width:34px;height:34px;border-color:var(--purple);border-style:solid;opacity:.7;}
+  .photo-wrap::before{top:-10px;left:-10px;border-width:2px 0 0 2px;border-radius:8px 0 0 0;}
+  .photo-wrap::after{bottom:-10px;right:-10px;border-width:0 2px 2px 0;border-radius:0 0 8px 0;}
+  .photo-wrap svg.avatar{width:min(56%,150px);height:auto;color:var(--purple);opacity:.85;flex-shrink:0;}
+  /* Once you swap the placeholder <svg class="avatar"> for a real <img class="avatar">,
+     this rule makes your photo fill the frame with rounded corners automatically. */
+  .photo-wrap img.avatar{width:100%;height:100%;object-fit:cover;border-radius:22px;display:block;}
+  .exp-badge{
+    position:absolute;left:-26px;bottom:34px;background:var(--surface);border:1px solid var(--line);
+    border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);z-index:2;min-width:150px;
+  }
+  .exp-badge .num{font-family:var(--font-display);font-weight:700;font-size:1.5rem;}
+  .exp-badge .num .accent{color:var(--purple);}
+  .exp-badge .lbl{font-family:var(--font-mono);font-size:.74rem;color:var(--muted);margin-top:2px;}
+
+  /* ---- about ---- */
+  .about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start;}
+  .about-grid p.bio{color:var(--muted);font-size:1.04rem;line-height:1.75;max-width:640px;}
+  .fact-table{margin-top:26px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);}
+  .fact-row{display:flex;justify-content:space-between;padding:13px 18px;font-family:var(--font-mono);font-size:.86rem;border-bottom:1px solid var(--line);}
+  .fact-row:last-child{border-bottom:none;}
+  .fact-row .k{color:var(--muted);}
+  .fact-row .v{font-weight:500;text-align:right;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
+  .chip{font-family:var(--font-mono);font-size:.8rem;padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--muted);}
+
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .stat-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px;}
+  .stat-card .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;}
+  .stat-card .ic svg{width:20px;height:20px;}
+  .stat-card .val{font-family:var(--font-display);font-weight:700;font-size:1.5rem;}
+  .stat-card .lbl{color:var(--muted);font-size:.88rem;}
+  .c-blue .ic{background:var(--blue-soft);color:var(--blue);}
+  .c-pink .ic{background:var(--pink-soft);color:var(--pink);}
+  .c-cyan .ic{background:var(--cyan-soft);color:var(--cyan);}
+  .c-purple .ic{background:var(--purple-soft);color:var(--purple);}
+
+  /* ---- projects ---- */
+  .project-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media (max-width:900px){ .project-grid{grid-template-columns:1fr;} }
+  .project-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+  .project-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--purple);}
+
+  .project-media{position:relative;aspect-ratio:16/10;background:var(--surface-2);overflow:hidden;}
+  .project-media .slide{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;}
+  .project-media .slide.active{opacity:1;}
+  .project-media .slide img{width:100%;height:100%;object-fit:cover;display:block;}
+  .project-media .ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(150deg,var(--purple-soft),var(--cyan-soft));}
+  .project-media .ph svg{width:32px;height:32px;color:var(--purple);opacity:.75;}
+  .project-media .ph span{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);}
+  .project-media .scrim{position:absolute;left:0;right:0;bottom:0;height:70%;background:linear-gradient(180deg,transparent,rgba(6,8,16,.72));pointer-events:none;z-index:1;}
+  .project-media .cap{position:absolute;left:16px;right:16px;bottom:14px;z-index:2;}
+  .project-media .tag{display:inline-block;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);backdrop-filter:blur(4px);padding:4px 10px;border-radius:6px;}
+  .project-media .cap h3{color:#fff;font-size:1.15rem;margin-top:8px;}
+  .project-media .dots{position:absolute;right:14px;top:14px;display:flex;gap:5px;z-index:2;}
+  .project-media .dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .2s ease,transform .2s ease;}
+  .project-media .dots span.active{background:#fff;transform:scale(1.3);}
+
+  .project-card-body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:16px;flex:1;}
+  .project-card .desc{color:var(--muted);font-size:.95rem;line-height:1.65;flex:1;}
+  .project-card .stack{display:flex;flex-wrap:wrap;gap:8px;}
+  .project-card .stack span{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);border:1px solid var(--line);padding:4px 9px;border-radius:6px;}
+  .project-card .links{display:flex;gap:10px;flex-wrap:wrap;}
+  .project-card .links a{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.78rem;border:1px solid var(--line);padding:8px 12px;border-radius:8px;}
+  .project-card .links a:hover{border-color:var(--purple);color:var(--purple);}
+  .project-card .links svg{width:13px;height:13px;}
+
+  /* ---- competitions & certificates grid ---- */
+  .comp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+  @media (max-width:700px){ .comp-grid{grid-template-columns:1fr;} }
+  .comp-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:row;align-items:stretch;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+  .comp-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--pink);}
+  .comp-media{position:relative;width:38%;flex-shrink:0;background:linear-gradient(150deg,var(--pink-soft),var(--purple-soft));overflow:hidden;}
+  .comp-media .slide{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;}
+  .comp-media .slide.active{opacity:1;}
+  .comp-media .slide img{width:100%;height:100%;object-fit:cover;display:block;}
+  .comp-media .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+  .comp-media .ph svg{width:38px;height:38px;color:var(--pink);opacity:.75;}
+  .comp-media .dots{position:absolute;right:14px;top:14px;display:flex;gap:5px;z-index:2;}
+  .comp-media .dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:background .2s ease,transform .2s ease;}
+  .comp-media .dots span.active{background:#fff;transform:scale(1.3);}
+  .comp-body{padding:20px 22px;display:flex;flex-direction:column;justify-content:center;gap:8px;flex:1;min-width:0;}
+  .comp-body .top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;}
+  .comp-body h3{font-size:1.1rem;font-family:var(--font-body);font-weight:600;}
+  .comp-body .year{font-family:var(--font-mono);font-size:.78rem;color:var(--muted);flex-shrink:0;}
+  .comp-body .place{align-self:flex-start;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;background:var(--pink-soft);color:var(--pink);padding:4px 10px;border-radius:6px;}
+  .comp-body .org{color:var(--muted);font-size:.92rem;}
+  .comp-body a.cert{display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-family:var(--font-mono);font-size:.78rem;color:var(--purple);}
+  .comp-body a.cert svg{width:12px;height:12px;}
+
+  /* ---- research ---- */
+  .paper-list{display:flex;flex-direction:column;}
+  .paper{display:flex;gap:18px;align-items:baseline;padding:20px 0;border-top:1px solid var(--line);}
+  .paper:last-child{border-bottom:1px solid var(--line);}
+  .paper .idx{font-family:var(--font-mono);color:var(--muted);font-size:.9rem;flex-shrink:0;}
+  .paper h3{font-size:1.05rem;font-weight:600;font-family:var(--font-body);}
+  .paper .meta{font-family:var(--font-mono);font-size:.8rem;color:var(--muted);margin-top:6px;}
+  .paper a.plink{font-family:var(--font-mono);font-size:.8rem;color:var(--purple);display:inline-flex;align-items:center;gap:6px;margin-top:8px;}
+  .paper a.plink svg{width:12px;height:12px;}
+
+  /* ---- feature cards (business/youtube) ---- */
+  .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .feature-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:30px;display:flex;flex-direction:column;gap:16px;}
+  .feature-media{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(150deg,var(--purple-soft),var(--cyan-soft));}
+  .feature-media img{width:100%;height:100%;object-fit:cover;display:block;}
+  .feature-card .icon-wrap{width:44px;height:44px;border-radius:11px;background:var(--purple-soft);color:var(--purple);display:flex;align-items:center;justify-content:center;}
+  .feature-card .icon-wrap svg{width:21px;height:21px;}
+  .feature-card h3{font-size:1.25rem;}
+  .feature-card .stat{font-family:var(--font-mono);font-size:.84rem;color:var(--purple);}
+  .feature-card p.desc{color:var(--muted);font-size:.96rem;line-height:1.65;}
+  .video-list{display:flex;flex-direction:column;gap:10px;}
+  .video-list a{display:flex;align-items:center;gap:10px;font-size:.88rem;border-top:1px solid var(--line);padding-top:10px;}
+  .video-list a:first-child{border-top:none;padding-top:0;}
+  .video-list .dur{margin-left:auto;font-family:var(--font-mono);font-size:.75rem;color:var(--muted);}
+  .video-list a:hover{color:var(--purple);}
+  .video-list svg{width:15px;height:15px;flex-shrink:0;color:var(--purple);}
+
+  /* ---- contact ---- */
+  .contact-box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(32px,6vw,56px);text-align:center;box-shadow:var(--shadow);}
+  .contact-box h2{font-size:clamp(1.8rem,4vw,2.5rem);}
+  .contact-box p{color:var(--muted);margin-top:14px;font-size:1.04rem;}
+  .contact-box .btn-primary{margin-top:28px;}
+  .social-row{display:flex;justify-content:center;gap:14px;margin-top:28px;flex-wrap:wrap;}
+  .social-row a{width:44px;height:44px;border-radius:11px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);}
+  .social-row a:hover{color:var(--purple);border-color:var(--purple);}
+  .social-row svg{width:19px;height:19px;}
+  .foot-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:32px;font-family:var(--font-mono);font-size:.8rem;color:var(--muted);padding-bottom:40px;}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  @media (max-width:900px){
+    .sidebar{display:none;}
+    main{margin-left:0;margin-top:0;}
+    .dot-nav{display:none;}
+    .mobile-bar{
+      display:flex;position:sticky;top:0;z-index:60;align-items:center;justify-content:space-between;
+      padding:16px clamp(20px,5vw,48px);background:color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+    }
+    .mobile-bar .logo{padding:0;font-size:1.15rem;}
+    .mobile-bar .actions{display:flex;align-items:center;gap:10px;}
+    .theme-switch.mobile{width:52px;height:30px;}
+    :root[data-theme="dark"] .theme-switch.mobile .thumb{transform:translateX(22px);}
+    .theme-switch.mobile .thumb{width:24px;height:24px;}
+    .menu-btn{display:flex;background:none;border:1px solid var(--line);border-radius:8px;padding:8px;color:var(--text);cursor:pointer;align-items:center;justify-content:center;}
+    .menu-btn svg{width:19px;height:19px;display:block;}
+    .mobile-menu{
+      position:fixed;inset:0;top:57px;background:var(--bg);z-index:59;padding:20px clamp(20px,5vw,48px);
+      display:flex;flex-direction:column;gap:2px;transform:translateY(-12px);opacity:0;pointer-events:none;
+      transition:opacity .2s ease,transform .2s ease;
+    }
+    .mobile-menu.open{opacity:1;transform:none;pointer-events:auto;}
+    .mobile-menu a{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--line);font-size:1rem;}
+    .mobile-menu a svg{width:18px;height:18px;color:var(--purple);}
+    .avail-pill{position:static;display:inline-flex;margin-bottom:24px;}
+    .hero-grid{grid-template-columns:1fr;}
+    .photo-wrap{max-width:350px;margin:0 auto;aspect-ratio:1/1;}
+    .exp-badge{left:8px;}
+    .about-grid,.feature-grid,.stat-grid{grid-template-columns:1fr;}
+    .comp-card{flex-direction:column;}
+    .comp-media{width:100%;height:190px;}
+  }
+</style>
+
+<div class="sidebar" id="sidebar">
+  <div class="logo"><span id="logoText">YN</span><span class="dot">.</span></div>
+  <nav class="side-nav" id="sideNav">
+    <a href="#home" data-icon="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"></path></svg><span>Home</span></a>
+    <a href="#about" data-icon="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"></path></svg><span>About</span></a>
+    <a href="#projects" data-icon="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg><span>Projects</span></a>
+    <a href="#competitions" data-icon="competitions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"></path></svg><span>Competitions</span></a>
+    <a href="#research" data-icon="research"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg><span>Research</span></a>
+    <a href="#business-youtube" data-icon="business"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg><span>Business</span></a>
+    <a href="#business-youtube" data-icon="youtube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"></path></svg><span>YouTube</span></a>
+    <a href="#contact" data-icon="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg><span>Contact</span></a>
+  </nav>
+  <div class="side-bottom">
+    <button class="theme-switch" id="themeToggle" type="button" aria-label="Toggle theme">
+      <span class="thumb"><svg id="thumbIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></svg></span>
+    </button>
+    <a class="cv-btn" id="cvBtn" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"></path></svg>
+      Download CV
+    </a>
+    <div class="side-socials" id="sideSocials"></div>
+  </div>
+</div>
+
+<div class="mobile-bar">
+  <div class="logo"><span id="logoTextM">YN</span><span class="dot">.</span></div>
+  <div class="actions">
+    <button class="theme-switch mobile" id="themeToggleM" type="button" aria-label="Toggle theme">
+      <span class="thumb"><svg id="thumbIconM" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></svg></span>
+    </button>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+    </button>
+  </div>
+</div>
+<nav class="mobile-menu" id="mobileMenu"></nav>
+
+<div class="dot-nav" id="dotNav"></div>
+
+<main>
+  <section class="hero" id="home">
+    <div class="starfield"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="avail-pill"><span class="led"></span><span id="availText">Available for Work</span></div>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow" id="heroEyebrow"></div>
+        <h1><span id="heroLine1"></span><br><span class="gtext" id="heroLine2"></span></h1>
+        <p class="tagline" id="heroTagline"></p>
+        <div class="cta-row">
+          <a href="#projects" class="btn btn-primary" id="ctaPrimary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a href="#contact" class="btn btn-ghost" id="ctaSecondary"></a>
+        </div>
+      </div>
+      <div class="photo-wrap">
+        <!-- YOUR PROFILE PHOTO GOES HERE.
+             Delete the <svg class="avatar">...</svg> placeholder below and
+             replace it with your own image tag, for example:
+               <img class="avatar" src="images/profile.jpg" alt="Your Name">
+             Put the photo file in an "images" folder next to this HTML file
+             (or adjust the path above to wherever you save it). -->
+        <!-- <svg class="avatar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4.2"></circle><path d="M4.5 21c1.8-4.6 5.6-6.8 7.5-6.8s5.7 2.2 7.5 6.8"></path></svg> -->
+        <img class="avatar" src="mm.png" alt="mm">
+        <div class="exp-badge">
+          <div class="num"><span class="accent" id="badgeNum"></span></div>
+          <div class="lbl" id="badgeLbl"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap reveal">
+      <div class="section-head"><div class="eyebrow">01 — WHO I AM</div><h2>About</h2></div>
+      <div class="about-grid">
+        <div>
+          <p class="bio" id="bioText"></p>
+          <div class="fact-table" id="factTable"></div>
+          <div class="chip-row" id="chipRow"></div>
+        </div>
+        <div class="stat-grid" id="statGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap reveal">
+      <div class="section-head"><div class="eyebrow">02 — SELECTED WORK</div><h2>Projects</h2></div>
+      <div class="project-grid" id="projectGrid"></div>
+    </div>
+  </section>
+
+  <section id="competitions">
+    <div class="wrap reveal">
+      <div class="section-head"><div class="eyebrow">03 — TRACK RECORD</div><h2>Competitions &amp; Certificates</h2></div>
+      <div class="comp-grid" id="compGrid"></div>
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="wrap reveal">
+      <div class="section-head"><div class="eyebrow">04 — PUBLICATIONS</div><h2>Research</h2></div>
+      <div class="paper-list" id="paperList"></div>
+    </div>
+  </section>
+
+  <section id="business-youtube">
+    <div class="wrap reveal">
+      <div class="section-head"><div class="eyebrow">05 · 06 — BEYOND THE WORK</div><h2>Business &amp; Channel</h2></div>
+      <div class="feature-grid">
+        <div class="feature-card" id="businessCard"></div>
+        <div class="feature-card" id="youtubeCard"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap reveal">
+      <div class="contact-box">
+        <div class="eyebrow" style="justify-content:center;">07 — GET IN TOUCH</div>
+        <h2 id="contactHeading"></h2>
+        <p id="contactPitch"></p>
+        <a class="btn btn-primary" id="emailBtn" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
+          <span id="emailLabel"></span>
+        </a>
+        <div class="social-row" id="socialRow"></div>
+      </div>
+      <div class="foot-meta">
+        <span id="footLoc"></span>
+        <span id="footYear"></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* =========================================================================
+   TEMPLATE — EDIT EVERYTHING HERE.
+   This DATA object is the single source of truth for the whole page.
+   Replace the placeholder strings/links below, save, and republish — the
+   layout, colors and animation never need to change for routine updates.
+   ========================================================================= */
+const DATA = {
+
+  // ============================ BRAND / LOGO =============================
+  brand: {
+    initials: "MM"                            // 2-3 letters shown top-left of the sidebar (e.g. "TR")
+  },
+
+  // ================================ HERO ==================================
+  // The big introduction at the very top of the page.
+  hero: {
+    availability: "Available for Work",       // small pill, top-right of hero. Set to "" (empty) to hide it.
+    eyebrow: "Mechatronics Engineer",              // small label above your name, e.g. "MECHATRONICS ENGINEER"
+    line1: "Muhammod",                             // first line of your name (plain text)
+    line2: "Mubin.",                            // second line of your name (shown in the gradient color)
+    tagline: "I design and build robots, embedded systems, and automation solutions for people solving real-world problems.",
+    ctaSecondary: "Get In Touch",              // text on the second (outline) button — the first button always says "View Work"
+    badgeNum: "5+",                            // big number in the floating card over your photo, e.g. "7+"
+    badgeLbl: "Years Experience"               // label under that number, e.g. "Robots Built"
+  },
+
+  // ================================ ABOUT =================================
+  about: {
+    bio: "I'm a Mechatronics student who learns by building—turning ideas into robots, prototypes, and working systems. Right now, I’m looking to collaborate with people who are building interesting things in robotics, automation, and engineering.",
+    // Short fact rows shown as a table under your bio. Keep to 4 rows — add
+    // or remove lines here if you need more or fewer.
+    facts: [
+      { k: "Based in",    v: "Khulna, Bangladesh" },              // v = the value shown, k = the label
+      { k: "Focus",       v: "Robotics" },
+      { k: "Currently",   v: "Learning ROS2" },
+      { k: "Open to",     v: "Designing any robotics projects" }
+    ],
+    // Skill/tool chips shown under the facts table — add or remove entries freely.
+    skills: ["ROS2", "PCB Design", "C++", "Embedded System", "SolidWorks", "Arduino", "OpenCV", "Python", "Raspbery Pi", "ESP32", "MATLAB", "SimuLink"]
+  },
+
+  // 4 stat tiles shown next to About (e.g. "50+ Projects Completed").
+  // "icon" must be exactly one of: code, users, clock, rocket
+  // "color" must be exactly one of: blue, pink, cyan, purple
+  stats: [
+    { icon:"code",   value:"25+", label:"Projects Completed", color:"blue" },
+    { icon:"users",  value:"40+", label:"People Reached",     color:"pink" },
+    { icon:"clock",  value:"4+", label:"Hours Logged",       color:"cyan" },
+    { icon:"rocket", value:"5+",  label:"Years of Experience",color:"purple" }
+  ],
+
+  // ============================== PROJECTS ================================
+  // One object per project card. Add or delete whole lines to add/remove cards.
+  //   tag      — small category label shown on the photo, e.g. "Robotics"
+  //   title    — project name
+  //   desc     — 1-2 sentence description
+  //   stack    — small tech tags shown under the description (any number)
+  //   demoUrl  — "Live Demo" button link (e.g. a YouTube video)
+  //   codeUrl  — "View Code" button link (e.g. a GitHub repo)
+  //   images   — up to 3 photos for this project. Leave an entry as "" to
+  //              show a placeholder tile instead. Hovering the card cycles
+  //              through whichever images are filled in.
+  //              PUT YOUR PROJECT PHOTOS HERE — e.g. save the files in an
+  //              "images" folder next to this HTML file and reference them
+  //              like: images:["images/lfr-1.jpg","images/lfr-2.jpg",""]
+  projects: [
+    { tag:"", title:"6 DOF Mobile Manipulator", desc:"A wheeled robotic platform equipped with a 6-DOF robotic arm, designed to combine autonomous navigation with object manipulation. This project explores how mobile robots can perceive, navigate, and interact with real-world environments.", stack:["ESP32","MG995 Servo","C++"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Mobile-Manipulator", images:["projects/mm1.jpeg","projects/mm2.jpeg","projects/mm3.jpeg","projects/mm4.jpeg","projects/mm5.jpeg"] },
+    { tag:"", title:"Autonomous Self driving Vehicle", desc:"A small-scale autonomous vehicle designed to perceive its surroundings and navigate without direct human control. It combines sensors, computer vision, localization, and control algorithms to explore the core technologies behind autonomous driving.", stack:["Raspberry Pi 5","RpLiDAR A3M1","Python3"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/ZERO_DRIFT_WRO_Future-Engineers_2026", images:["projects/wro1.jpeg","projects/wro2.jpeg","projects/wro3.jpeg","projects/wro4.jpeg","projects/wro5.jpeg"] },
+    { tag:"", title:"Competitive Line Following Robot", desc:"A high-speed autonomous robot designed to follow complex tracks using sensor-based control and PID algorithms. The project focuses on precise motion control, fast decision-making, and reliable performance under competitive conditions.", stack:["Arduino Nano","C++","PlatformIO"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Competitive-LFR", images:["projects/lfr1.jpeg","projects/lfr2.jpeg","projects/lfr3.jpeg","projects/lfr4.jpeg","projects/lfr5.jpeg"] },
+    { tag:"", title:"UAV Drone", desc:"A remotely controlled and autonomous aerial platform built to explore flight control, stabilization, and aerial robotics. The project provides hands-on experience with embedded systems, sensors, control algorithms, and real-time decision-making.", stack:["Pixhawk","KK2.1.5","Flysky fs-i6x"], demoUrl:"#", codeUrl:"#", images:["projects/drone1.jpeg","projects/drone2.jpeg","projects/drone3.jpeg","projects/drone4.jpeg","projects/drone5.jpeg","projects/drone6.jpeg","projects/drone7.jpeg"] },
+    { tag:"", title:"Fire Fighting Bot ", desc:"An autonomous robot designed to detect and locate fire, navigate toward the target, and extinguish it using an onboard suppression system. The project combines sensors, embedded control, navigation, and real-time decision-making for emergency response.", stack:["ESP32","WebServer","C++"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Fire_Fighting_Bot", images:["projects/ff1.jpeg","projects/ff2.jpeg","projects/ff3.jpeg","projects/ff4.jpeg","projects/ff5.jpeg","projects/ff6.jpeg"] },
+    { tag:"", title:"Head-Operated WheelChair", desc:"A hands-free wheelchair control system that translates head movements into directional commands for mobility assistance. The project explores human-machine interaction and accessible control systems using motion sensors and motor control.", stack:["Arduino Uno R3","MPU6050","C++"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Head-Operated-Wheel-Chair", images:["projects/wc.jpeg","projects/wc1.jpeg","projects/wc2.jpeg"] },
+    { tag:"", title:"Micromouse Maze-Solver", desc:"A compact autonomous robot designed to explore and solve a maze using distance sensors, motion control, and maze-solving algorithms. The project focuses on precise navigation, localization, and autonomous decision-making in constrained environments.", stack:["ESP32","C++","Flood-Fill"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Micromouse_Maze_Solver", images:["projects/ms1.jpeg","projects/ms2.jpeg","projects/ms3.jpeg","projects/ms4.jpeg"] },
+    { tag:"", title:"Soccer Bot", desc:"An autonomous robotic platform designed to detect, approach, and interact with a soccer ball while navigating a playing field. The project combines sensing, motion control, and real-time decision-making for robotic competition.", stack:["Flysky fs-i6x","BTS7960"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Soccer-bot", images:["projects/sc1.jpeg","projects/sc2.jpeg","projects/sc3.jpeg","projects/sc4.jpeg"] },
+    { tag:"", title:"ESP32 Surveillance Camera Car", desc:"A remotely controlled mobile surveillance platform built around an ESP32-CAM, capable of live video monitoring while navigating through an environment. It provides hands-on experience with wireless communication, embedded systems, and robotic mobility.", stack:["ESP32 Camera","ASYNWebServer","C++"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/ESP32-Cameara-Surveillance-Car", images:["projects/cc1.jpeg","projects/cc2.jpeg","projects/cc3.jpeg"] },
+    { tag:"", title:"Obstacle Avoiding Car", desc:"A small autonomous vehicle that detects obstacles in its path and adjusts its movement accordingly. The project demonstrates the fundamentals of sensor-based perception, motor control, and autonomous navigation.", stack:["ESP32","Servo Control"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Obstacle-Avoiding-Car", images:["projects/oa1.jpeg"] },
+    { tag:"", title:"Mini Soccer Bot", desc:"A compact robotic platform built to detect and chase a ball while performing basic soccer-playing actions. It introduces practical concepts in sensors, motor control, embedded programming, and robotic behavior.", stack:["ESP8266","Arduino IDE","C++"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Soccer-bot", images:["projects/scm1.jpeg","projects/scm2.jpeg","projects/scm3.jpeg"] },
+    { tag:"", title:"Robo-Guard", desc:"An ESP32-CAM-based security and firefighting robot capable of detecting fire, sending phone-call alerts, providing remote camera surveillance, and spraying water to extinguish flames. The project integrates IoT communication, computer vision, embedded control, and emergency response into a single mobile platform.", stack:["ESP32 Camera","C++"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/ESP32-Cameara-Surveillance-Car", images:["projects/rg1.jpeg","projects/rg2.jpeg"] },
+    { tag:"PCB Design", title:"Ir Sensor Array", desc:"A custom IR sensor array PCB designed and assembled for high-speed line-following applications. The project involved circuit design, PCB layout, component selection, soldering, and hardware testing to develop a reliable sensing system.", stack:["EasyEDA","Soldering","C++"], demoUrl:"#", codeUrl:"https://github.com/mubinzz/Ir-sensor-array", images:["projects/pcb1.jpeg","projects/pcb2.jpeg","projects/pcb3.jpeg","projects/pcb4.jpeg","projects/pcb5.jpeg"] }
+  ],
+
+  // ===================== COMPETITIONS / CERTIFICATES ======================
+  // One object per award, newest first. "cert" is the link behind
+  // "View certificate" — point it at a photo/PDF of the certificate once you
+  // have one hosted somewhere (or leave "#" to keep the link inactive).
+  // "images" — one or a few photos for this entry (the certificate, the
+  // trophy, the team on stage, etc), shown large on the card. Leave [] to
+  // show a placeholder icon. Add more than one and hovering the card cycles
+  // through them, same as the project photos above,
+  // e.g. images:["cert1.jpg","prize1.jpg"]
+  competitions: [
+    { title:"MicroMouse Maze-Solver", org:"Dept. of Mechatronics Engineering, KUET", place:"2nd Runner-up", year:"2026", cert:"#", images:["Certificates/ms.jpeg"] },
+    { title:"Project Display", org:"St. Joseph Higher Secondary School", place:"1st Place", year:"2022", cert:"#", images:["Certificates/ps.png","Certificates/ps1.png","Certificates/ps2.jpg","Certificates/ps3.jpg","Certificates/ps4.png"] },
+    { title:"Creative Talent Hunt", org:"Government of Bangladesh", place:"Finalist",  year:"2023", cert:"#", images:["Certificates/cth.jpeg","Certificates/cth1.jpg","Certificates/cth2.jpg"] },
+    { title:"Student of the Year", org:"Dhaka Collegiate School", place:"Best  Student",  year:"2018", cert:"#", images:["Certificates/soy.png"] },
+    { title:"IT Olympiad", org:"BNMPC National Science Carnival", place:"1st Place",  year:"2022", cert:"#", images:["Certificates/it.png"] },
+    { title:"Extempore Speech", org:"BNMPC National Science Carnival", place:"2nd Place",  year:"2022", cert:"#", images:["Certificates/xp.png"] },
+    { title:"Science Olympiad", org:"Bangladesh Science Academy", place:"8th",  year:"2023", cert:"#", images:["Certificates/so.jpeg"] },
+    { title:"Table tennis", org:"Dept. of Mechatronics Engineering, KUET", place:"1st Runner-up",  year:"2025", cert:"#", images:["Certificates/tt s.jpeg"] },
+    { title:"Future Engineers", org:"World Robot Olympiad, BD", place:"Participent",  year:"2026", cert:"#", images:["Certificates/wro.jpeg"] },
+    { title:"Line Following Robot", org:"Robotics and Mechatronics Engineering Club of Dhaka University, BD", place:"Participent",  year:"2025", cert:"#", images:["Certificates/lfrdu.png"] },
+    { title:"Soccer Bot", org:"World Robot Olympiad, BD", place:"Participent",  year:"2026", cert:"#", images:["Certificates/sc.png"] },
+    { title:"Fire Fighting Bot Competition", org:"BUET Robotics Society", place:"Participent",  year:"2026", cert:"#", images:["Certificates/ff.jpeg"] },
+    { title:"Class Representative", org:"Dept. of Mechatronics Engineering, KUET", place:"",  year:"2026", cert:"#", images:["Certificates/cr.jpeg"] }
+  ],
+
+  // ================================ RESEARCH ==============================
+  // One object per paper/publication. "link" points at the paper (PDF, DOI, etc.).
+  research: [
+    { title:"Not yet", meta:"Venue or status · 20XX", link:"#" },
+    
+  ],
+
+  // ============================== BUSINESS ================================
+  business: {
+    name: "RoboKart",
+    stat: "84+ orders fulfilled",         // short proof line under the name
+    tagline: "We sell robotics and electronics components.",
+    ctaLabel: "Visit Store",                   // button text
+    ctaUrl: "https://web.facebook.com/profile.php?id=61564310084428",                                // button link — your store/page URL
+    image: "rk.png"                              // optional photo/logo shown at the top of the card. Leave "" to hide it.
+  },
+
+  // ================================ YOUTUBE ===============================
+  youtube: {
+    name: "Bot Builders",
+    stat: "99+ subscribers · 20 videos",
+    tagline: "Teaching Robotics.",
+    ctaLabel: "Visit Channel",                 // button text
+    ctaUrl: "https://www.youtube.com/@BOT_Builders_BD",                               // button link — your channel URL
+    // Up to 3 featured videos listed under the description. "url" is the
+    // link for that specific video; "dur" is the duration shown on the right.
+    videos: [
+      { title:"Video title", dur:"00:00", url:"#" },
+      { title:"Video title", dur:"00:00", url:"#" },
+      { title:"Video title", dur:"00:00", url:"#" }
+    ]
+  },
+
+  // =============================== CONTACT ================================
+  contact: {
+    heading: "Let's create something great.",  // big heading in the contact box
+    pitch: "Open to new roles and collaborations — reach out any time.",
+    email: "ahmedmubin1610@email.com",                   // used by the email button AND the mailto icon
+    linkedin: "https://www.linkedin.com/in/muhammod-mubin/",                              // your LinkedIn profile URL
+    github: "https://github.com/mubinzz",                                // your GitHub profile URL
+    youtube: "https://www.youtube.com/@BOT_Builders_BD",                               // your YouTube channel URL (reused in the icon row)
+    location: "Faridpur, Bangladesh"              // shown bottom-left of the footer
+  },
+
+  resumeUrl: "#" // Link to your CV/resume PDF — powers the "Download CV" button in the sidebar
+};
+/* ===================== END OF EDITABLE CONTENT ===================== */
+
+const ICONS = {
+  external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6M10 14L21 3"></path></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"></path></svg>',
+  award: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"></circle><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"></path></svg>',
+  box: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"></path><path d="M3 8v8l9 5 9-5V8M12 13v8"></path></svg>',
+  youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"></path></svg>',
+  linkedin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle><path d="M10 9v12M10 13a4 4 0 0 1 8 0v8"></path></svg>',
+  github: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"></path></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>',
+  image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5.5-5.5a2 2 0 0 0-2.8 0L3 20"></path></svg>',
+  code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5L2 12l6 7M16 5l6 7-6 7"></path></svg>',
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3 20c.9-3 3-4.8 6-4.8s5.1 1.8 6 4.8"></path><circle cx="17.5" cy="9" r="2.5"></circle><path d="M16 15.3c2.4.4 3.9 1.9 4.6 4.7"></path></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg>',
+  rocket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16s-1-4 3-8 9-4 9-4 1 5-3 9-8 3-8 3z"></path><path d="M9 15l-4 4M8 10.5A2.5 2.5 0 1 1 12.9 11"></path></svg>',
+  download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"></path></svg>',
+  arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>'
+};
+
+const NAV_ITEMS = [
+  { id:"home", label:"Home", icon:"home" },
+  { id:"about", label:"About", icon:"about" },
+  { id:"projects", label:"Projects", icon:"projects" },
+  { id:"competitions", label:"Competitions", icon:"competitions" },
+  { id:"research", label:"Research", icon:"research" },
+  { id:"business-youtube", label:"Business", icon:"business" },
+  { id:"contact", label:"Contact", icon:"contact" }
+];
+
+// Generic hover-to-cycle slideshow — used by both the project photo grid
+// (.project-media) and the competition/certificate thumbnails (.t-thumb).
+function initSlideshows(selector){
+  document.querySelectorAll(selector).forEach(media=>{
+    const slides = Array.from(media.querySelectorAll('.slide'));
+    const dots = Array.from(media.querySelectorAll('.dots span'));
+    if(slides.length < 2) return;
+    let idx = 0, timer = null;
+    function show(i){
+      slides.forEach((s,j)=> s.classList.toggle('active', j===i));
+      dots.forEach((d,j)=> d.classList.toggle('active', j===i));
+    }
+    media.addEventListener('mouseenter', ()=>{
+      timer = setInterval(()=>{ idx = (idx+1) % slides.length; show(idx); }, 1100);
+    });
+    media.addEventListener('mouseleave', ()=>{
+      clearInterval(timer); idx = 0; show(0);
+    });
+  });
+}
+
+function render(){
+  document.getElementById('logoText').textContent = DATA.brand.initials;
+  document.getElementById('logoTextM').textContent = DATA.brand.initials;
+  document.getElementById('cvBtn').href = DATA.resumeUrl;
+
+  document.getElementById('availText').textContent = DATA.hero.availability;
+  document.querySelector('.avail-pill').style.display = DATA.hero.availability ? 'inline-flex' : 'none';
+  document.getElementById('heroEyebrow').textContent = DATA.hero.eyebrow;
+  document.getElementById('heroLine1').textContent = DATA.hero.line1;
+  document.getElementById('heroLine2').textContent = DATA.hero.line2;
+  document.getElementById('heroTagline').textContent = DATA.hero.tagline;
+  document.getElementById('ctaPrimary').innerHTML = 'View Work ' + ICONS.arrow;
+  document.getElementById('ctaSecondary').textContent = DATA.hero.ctaSecondary;
+  document.getElementById('badgeNum').textContent = DATA.hero.badgeNum;
+  document.getElementById('badgeLbl').textContent = DATA.hero.badgeLbl;
+
+  document.getElementById('bioText').textContent = DATA.about.bio;
+  document.getElementById('factTable').innerHTML = DATA.about.facts.map(f=>`<div class="fact-row"><span class="k">${f.k}</span><span class="v">${f.v}</span></div>`).join('');
+  document.getElementById('chipRow').innerHTML = DATA.about.skills.map(s=>`<span class="chip">${s}</span>`).join('');
+  document.getElementById('statGrid').innerHTML = DATA.stats.map(s=>`
+    <div class="stat-card c-${s.color}">
+      <div class="ic">${ICONS[s.icon]||ICONS.code}</div>
+      <div class="val">${s.value}</div>
+      <div class="lbl">${s.label}</div>
+    </div>`).join('');
+
+  document.getElementById('projectGrid').innerHTML = DATA.projects.map(p=>{
+    const imgs = (p.images && p.images.length ? p.images : ["","",""]).slice(0,6);
+    const slidesHTML = imgs.map((src,j)=> src
+      ? `<div class="slide${j===0?' active':''}"><img src="${src}" alt="${p.title} — photo ${j+1}" loading="lazy"></div>`
+      : `<div class="slide${j===0?' active':''}"><div class="ph">${ICONS.image}<span>Add photo ${j+1}</span></div></div>`
+    ).join('');
+    const dotsHTML = imgs.length > 1 ? `<div class="dots">${imgs.map((_,j)=>`<span${j===0?' class="active"':''}></span>`).join('')}</div>` : '';
+    return `
+    <div class="project-card">
+      <div class="project-media">
+        ${slidesHTML}
+        <div class="scrim"></div>
+        ${dotsHTML}
+        <div class="cap"><span class="tag">${p.tag}</span><h3>${p.title}</h3></div>
+      </div>
+      <div class="project-card-body">
+        <p class="desc">${p.desc}</p>
+        <div class="stack">${p.stack.map(s=>`<span>${s}</span>`).join('')}</div>
+        <div class="links">
+          <a href="${p.demoUrl}" target="_blank" rel="noopener">${ICONS.play} Live Demo</a>
+          <a href="${p.codeUrl}" target="_blank" rel="noopener">${ICONS.external} View Code</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  initSlideshows('.project-media');
+
+  document.getElementById('compGrid').innerHTML = DATA.competitions.map(c=>{
+    const imgs = c.images || [];
+    const mediaHTML = imgs.length
+      ? imgs.map((src,j)=> `<div class="slide${j===0?' active':''}"><img src="${src}" alt="${c.title} — photo ${j+1}" loading="lazy"></div>`).join('')
+      : `<div class="ph">${ICONS.award}</div>`;
+    const dotsHTML = imgs.length > 1 ? `<div class="dots">${imgs.map((_,j)=>`<span${j===0?' class="active"':''}></span>`).join('')}</div>` : '';
+    return `
+    <div class="comp-card">
+      <div class="comp-media">${mediaHTML}${dotsHTML}</div>
+      <div class="comp-body">
+        <div class="top"><h3>${c.title}</h3><span class="year">${c.year}</span></div>
+        <span class="place">${c.place}</span>
+        <div class="org">${c.org}</div>
+        <a class="cert" href="${c.cert}" target="_blank" rel="noopener">${ICONS.award} View certificate</a>
+      </div>
+    </div>`;
+  }).join('');
+  initSlideshows('.comp-media');
+
+  document.getElementById('paperList').innerHTML = DATA.research.map((r,i)=>`
+    <div class="paper">
+      <span class="idx">[${i+1}]</span>
+      <div>
+        <h3>${r.title}</h3>
+        <div class="meta">${r.meta}</div>
+        <a class="plink" href="${r.link}" target="_blank" rel="noopener">${ICONS.external} Read more</a>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('businessCard').innerHTML = `
+    ${DATA.business.image ? `<div class="feature-media"><img src="${DATA.business.image}" alt="${DATA.business.name}"></div>` : ''}
+    <div class="icon-wrap">${ICONS.box}</div>
+    <h3>${DATA.business.name}</h3>
+    <div class="stat">${DATA.business.stat}</div>
+    <p class="desc">${DATA.business.tagline}</p>
+    <a class="btn btn-ghost" style="align-self:flex-start;" href="${DATA.business.ctaUrl}" target="_blank" rel="noopener">${DATA.business.ctaLabel} ${ICONS.external}</a>`;
+
+  document.getElementById('youtubeCard').innerHTML = `
+    <div class="icon-wrap">${ICONS.youtube}</div>
+    <h3>${DATA.youtube.name}</h3>
+    <div class="stat">${DATA.youtube.stat}</div>
+    <p class="desc">${DATA.youtube.tagline}</p>
+    <div class="video-list">${DATA.youtube.videos.map(v=>`<a href="${v.url}" target="_blank" rel="noopener">${ICONS.play}<span>${v.title}</span><span class="dur">${v.dur}</span></a>`).join('')}</div>
+    <a class="btn btn-ghost" style="align-self:flex-start;" href="${DATA.youtube.ctaUrl}" target="_blank" rel="noopener">${DATA.youtube.ctaLabel} ${ICONS.external}</a>`;
+
+  document.getElementById('contactHeading').textContent = DATA.contact.heading;
+  document.getElementById('contactPitch').textContent = DATA.contact.pitch;
+  document.getElementById('emailBtn').href = `mailto:${DATA.contact.email}`;
+  document.getElementById('emailLabel').textContent = DATA.contact.email;
+  document.getElementById('footLoc').textContent = DATA.contact.location;
+  document.getElementById('footYear').textContent = `© ${new Date().getFullYear()} ${DATA.hero.line1} ${DATA.hero.line2.replace('.','')}`;
+
+  const socialsHTML = `
+    <a href="mailto:${DATA.contact.email}" aria-label="Email">${ICONS.mail}</a>
+    <a href="${DATA.contact.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn">${ICONS.linkedin}</a>
+    <a href="${DATA.contact.github}" target="_blank" rel="noopener" aria-label="GitHub">${ICONS.github}</a>
+    <a href="${DATA.contact.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${ICONS.youtube}</a>`;
+  document.getElementById('socialRow').innerHTML = socialsHTML;
+  document.getElementById('sideSocials').innerHTML = socialsHTML;
+
+  // side nav + mobile menu + dot nav (built from NAV_ITEMS)
+  const dotNav = document.getElementById('dotNav');
+  dotNav.innerHTML = NAV_ITEMS.map(n=>`<button class="d" data-target="${n.id}" aria-label="${n.label}"></button>`).join('');
+
+  const mobileMenu = document.getElementById('mobileMenu');
+  mobileMenu.innerHTML = Array.from(document.querySelectorAll('.side-nav a')).map(a=>a.outerHTML).join('');
+}
+render();
+
+/* ---------- keep --topbar-h matched to the real (now horizontal) nav bar height ----------
+   The top bar can wrap onto two lines on narrower desktop widths, so its height
+   isn't fixed — this measures it and pushes the page content down by exactly that much. */
+function syncTopbarHeight(){
+  const sb = document.getElementById('sidebar');
+  if(sb) document.documentElement.style.setProperty('--topbar-h', sb.offsetHeight + 'px');
+}
+syncTopbarHeight();
+window.addEventListener('resize', syncTopbarHeight);
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(syncTopbarHeight); }
+
+/* ---------- theme toggle ---------- */
+const root = document.documentElement;
+const SUN = '<circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>';
+const MOON = '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path>';
+function currentIsDark(){
+  const explicit = root.getAttribute('data-theme');
+  if(explicit) return explicit === 'dark';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function syncThumbIcons(){
+  const icon = currentIsDark() ? MOON : SUN;
+  document.getElementById('thumbIcon').innerHTML = icon;
+  document.getElementById('thumbIconM').innerHTML = icon;
+}
+function applyTheme(t){
+  if(t){ root.setAttribute('data-theme', t); } else { root.removeAttribute('data-theme'); }
+  try{ localStorage.setItem('portfolio-theme', t || ''); }catch(e){}
+  syncThumbIcons();
+}
+(function initTheme(){
+  try{ const saved = localStorage.getItem('portfolio-theme'); if(saved) root.setAttribute('data-theme', saved); }catch(e){}
+  syncThumbIcons();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ if(!root.getAttribute('data-theme')) syncThumbIcons(); });
+})();
+function toggleTheme(){ applyTheme(currentIsDark() ? 'light' : 'dark'); }
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+document.getElementById('themeToggleM').addEventListener('click', toggleTheme);
+
+/* ---------- mobile menu ---------- */
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', ()=> mobileMenu.classList.toggle('open'));
+mobileMenu.addEventListener('click', (e)=>{ if(e.target.closest('a')) mobileMenu.classList.remove('open'); });
+
+/* ---------- scroll reveal ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+if('IntersectionObserver' in window){
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el=> io.observe(el));
+} else { revealEls.forEach(el=> el.classList.add('in')); }
+
+/* ---------- active section tracking (sidebar + dot nav) ---------- */
+const sectionEls = NAV_ITEMS.map(n=>document.getElementById(n.id)).filter(Boolean);
+const sideLinks = Array.from(document.querySelectorAll('.side-nav a'));
+const dotEls = Array.from(document.querySelectorAll('.dot-nav .d'));
+function syncActive(){
+  let current = sectionEls[0] ? sectionEls[0].id : null;
+  sectionEls.forEach(s=>{ if(s.getBoundingClientRect().top < 160) current = s.id; });
+  sideLinks.forEach(a=> a.classList.toggle('active', a.getAttribute('href') === '#'+current));
+  dotEls.forEach(d=> d.classList.toggle('active', d.dataset.target === current));
+}
+dotEls.forEach(d=> d.addEventListener('click', ()=>{
+  const t = document.getElementById(d.dataset.target);
+  if(t) t.scrollIntoView({ behavior:'smooth', block:'start' });
+}));
+document.addEventListener('scroll', syncActive, { passive:true });
+syncActive();
+</script>
